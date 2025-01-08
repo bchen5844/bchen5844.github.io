@@ -109,7 +109,7 @@
       }
 
       // Gravity
-      player.velocityY = 2;
+      player.velocityY += 1;
 
       // Jumping
       if (keyWentDown("up") && jumpCount < 2) {
@@ -121,7 +121,7 @@
       if (player.y >= 370) {
         player.velocityY = 0;
         player.y = 370;
-        jumpCount = 0;
+        jumpCount = 0; // Reset the jump count when the player touches the ground
       }
 
       // Prevent the player from going above the screen
@@ -140,12 +140,14 @@
         blockCollision = false;
       }
 
-      // Move obstacles
+      // Move obstacles (only blocks)
       moveObstacle(block);
       moveObstacle(block2);
-      moveObstacle(goldCoin);
-      moveObstacle(silverCoin);
-      moveObstacle(bronzeCoin);
+
+      // Reset coins
+      if (goldCoin.visible) resetCoin(goldCoin);
+      if (silverCoin.visible) resetCoin(silverCoin);
+      if (bronzeCoin.visible) resetCoin(bronzeCoin);
 
       // Draw sprites
       drawSprites();
