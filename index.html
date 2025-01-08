@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flappy Bird Game</title>
-  <!-- Correct CDN Links -->
+  <!-- Load p5.js and p5.play.js Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/molleindustria/p5.play/lib/p5.play.js"></script>
   <style>
@@ -31,30 +31,29 @@
     var coinCounter = 0;
 
     function setup() {
-      createCanvas(400, 400);
+      createCanvas(400, 400); // Create the game canvas
 
-      // Initialize sprites
-      player = createSprite(30, 370);
+      // Initialize player sprite
+      player = createSprite(30, 370, 20, 20); // x, y, width, height
       player.shapeColor = "blue";
-      player.scale = 0.5;
 
-      block = createSprite(250, 380);
+      // Initialize block sprites
+      block = createSprite(250, 380, 40, 40);
       block.shapeColor = "red";
-      block.scale = 0.4;
 
-      block2 = createSprite(250, 50);
+      block2 = createSprite(250, 50, 40, 40);
       block2.shapeColor = "orange";
-      block2.scale = 0.2;
 
-      goldCoin = createSprite(200, 200);
+      // Initialize coin sprites
+      goldCoin = createSprite(200, 200, 15, 15);
       goldCoin.shapeColor = "yellow";
       goldCoin.visible = true;
 
-      silverCoin = createSprite(200, 200);
+      silverCoin = createSprite(200, 200, 15, 15);
       silverCoin.shapeColor = "gray";
       silverCoin.visible = false;
 
-      bronzeCoin = createSprite(200, 200);
+      bronzeCoin = createSprite(200, 200, 15, 15);
       bronzeCoin.shapeColor = "brown";
       bronzeCoin.visible = false;
     }
@@ -72,8 +71,7 @@
     }
 
     function draw() {
-      background(3, 86, 252);
-
+      background(3, 86, 252); // Blue background
       frameCounter++;
 
       // Alternate coins every 100 frames
@@ -94,10 +92,10 @@
         }
       }
 
-      // GRAVITY
+      // Gravity
       player.velocityY += 1;
 
-      // JUMPING
+      // Jumping
       if (keyWentDown("up") && jumpCount < 2) {
         player.velocityY = -15;
         jumpCount++;
