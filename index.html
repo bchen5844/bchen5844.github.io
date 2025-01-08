@@ -58,6 +58,22 @@
       bronzeCoin.visible = false;
     }
 
+    // Custom isTouching function
+    function isTouching(sprite1, sprite2) {
+      // Check for overlap on the x-axis
+      let xOverlap = 
+        (sprite1.x > sprite2.x && (sprite1.x - sprite2.x) < (sprite1.width / 2 + sprite2.width / 2)) ||
+        (sprite1.x < sprite2.x && (sprite1.x - sprite2.x) > -(sprite1.width / 2 + sprite2.width / 2));
+
+      // Check for overlap on the y-axis
+      let yOverlap = 
+        (sprite1.y > sprite2.y && (sprite1.y - sprite2.y) < (sprite1.height / 2 + sprite2.height / 2)) ||
+        (sprite1.y < sprite2.y && (sprite1.y - sprite2.y) > -(sprite1.height / 2 + sprite2.height / 2));
+
+      // Return true if both x and y overlap (touching)
+      return xOverlap && yOverlap;
+    }
+
     function resetCoin(coin) {
       coin.x = random(400, 600); // Random x position to the right
       coin.y = random(50, 350);  // Random vertical position
@@ -115,7 +131,7 @@
       }
 
       // Block collision
-      if (player.isTouching(block) || player.isTouching(block2)) {
+      if (isTouching(player, block) || isTouching(player, block2)) {
         if (!blockCollision) {
           health -= 10;
           blockCollision = true;
