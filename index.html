@@ -20,159 +20,157 @@
   </style>
 </head>
 <body>
-  <!-- Game Canvas -->
   <script>
     //GAME SETUP
-// Create the sprites
-var player, block, goldCoin, silverCoin, bronzeCoin, block2;
-player = createSprite(30, 370);
-player.setAnimation("square");
-player.scale = 0.5;
+    // Create the sprites
+    var player, block, goldCoin, silverCoin, bronzeCoin, block2;
 
-block = createSprite(250, 380);
-block.setAnimation("block");
-block.scale = 0.6;
-block.height = block.height * 2;
+    function setup() {
+      createCanvas(400, 400);
 
-block2 = createSprite(250, 50);
-block2.setAnimation("lava");
-block2.scale = 0.2;
+      player = createSprite(30, 370);
+      player.shapeColor = "blue"; // Replaces setAnimation temporarily
+      player.scale = 0.5;
 
-goldCoin = createSprite(200, 200);
-goldCoin.setAnimation("gold");
-goldCoin.visible = true;
+      block = createSprite(250, 380);
+      block.shapeColor = "red"; // Replaces setAnimation temporarily
+      block.scale = 0.4;
 
-silverCoin = createSprite(200, 200);
-silverCoin.setAnimation("silver");
-silverCoin.visible = false;
+      block2 = createSprite(250, 50);
+      block2.shapeColor = "orange"; // Replaces setAnimation temporarily
+      block2.scale = 0.2;
 
-bronzeCoin = createSprite(200, 200);
-bronzeCoin.setAnimation("bronze");
-bronzeCoin.visible = false;
-
-function resetCoin(coin) {
-  coin.x = random(400, 600); // Random position to the right
-  coin.y = random(260, 370); // Random vertical position
-}
-
-// set velocity for the obstacle and the target
-function moveObstacle(obstacle) {
-  obstacle.velocityX = -15; // Move left
-  if (obstacle.x < -10) {
-    obstacle.x = random(400, 600); // Reset to the right
-  }
-}
-//create the variables
-var score = 0;
-var health = 100;
-var coinCounter = 0;
-var frameCounter = 0;
-var blockCollision = false;
-
-function draw() {
-  frameCounter++;
-  // BACKGROUND
-  // draw the ground and other background
-  background(rgb(3, 86, 252));
-  // Alternate coins every 100 frames
-  if (frameCounter % 100 === 0) {
-    coinCounter = (coinCounter + 1) % 3; // Cycles through 0, 1, 2
-    if (coinCounter === 0) {
+      goldCoin = createSprite(200, 200);
+      goldCoin.shapeColor = "yellow"; // Replaces setAnimation temporarily
       goldCoin.visible = true;
-      silverCoin.visible = false;
-      bronzeCoin.visible = false;
-    } else if (coinCounter === 1) {
-      goldCoin.visible = false;
-      silverCoin.visible = true;
-      bronzeCoin.visible = false;
-    } else {
-      goldCoin.visible = false;
-      silverCoin.visible = false;
-      bronzeCoin.visible = true;
-    }
-  }
-  // SPRITE INTERACTIONS
-  // if the player touches the obstacle
-  // the health goes down, and the obstacle turns
-  // SPRITE INTERACTIONS
-    if (player.isTouching(block) || player.isTouching(block2)) {
-      if (!blockCollision) {
-        health = health - 10; // Reduce health by 10
-        blockCollision = true; // Set collision flag
-    }
-  } else {
-  blockCollision = false; // Reset the collision flag when not touching
-  }
 
-  // if the player touches the target
-  // the score goes up, the target resets
-  if (player.isTouching(goldCoin) && goldCoin.visible) {
-    score = score + 10;
-    resetCoin(goldCoin);
-  }
-  if (player.isTouching(silverCoin) && silverCoin.visible) {
-    score = score + 5;
-    resetCoin(silverCoin);
-  }
-  if (player.isTouching(bronzeCoin) && bronzeCoin.visible) {
-    score = score + 2;
-    resetCoin(bronzeCoin);
-  }
-  // GRAVITY
-  player.velocityY = 2; // Add gravity to pull the player down
-  // JUMPING
-  // if the player has reached the ground
-  // stop moving down
-    if (player.y === 370) {
-      player.velocityY = 0;
+      silverCoin = createSprite(200, 200);
+      silverCoin.shapeColor = "gray"; // Replaces setAnimation temporarily
+      silverCoin.visible = false;
+
+      bronzeCoin = createSprite(200, 200);
+      bronzeCoin.shapeColor = "brown"; // Replaces setAnimation temporarily
+      bronzeCoin.visible = false;
     }
-  // if the player presses the up arrow
-  // start moving up
-    if (keyDown("up")) {
-      player.velocityY = -10;
-      playSound("sound://default.mp3", false);
+
+    function resetCoin(coin) {
+      coin.x = random(400, 600); // Random position to the right
+      coin.y = random(260, 370); // Random vertical position
     }
-  // if the player reaches the top of the jump
-  // start moving down
-    if (player.y < 50) {
-      player.velocityY = 15;
+
+    // set velocity for the obstacle and the target
+    function moveObstacle(obstacle) {
+      obstacle.velocityX = -5; // Move left
+      if (obstacle.x < -10) {
+        obstacle.x = random(400, 600); // Reset to the right
+      }
     }
-  // LOOPING
-  // if the obstacle has gone off the left hand side of the screen, 
-  // move it to the right hand side of the screen
-  moveObstacle(block);
-  moveObstacle(goldCoin);
-  moveObstacle(bronzeCoin);
-  moveObstacle(silverCoin);
-  moveObstacle(block2);
-  // if the target has gone off the left hand side of the screen,
-  // move it to the right hand side of the screen
-  if (goldCoin.x < 10) {
-    goldCoin.velocityX = 5;
-  }
-  // DRAW SPRITES
-  drawSprites();
-  
-  // SCOREBOARD
-  // add scoreboard and health meter
-  fill("black");
-  textSize(20);
-  text("Score:", 150, 30);
-  text (score, 220, 30);
-  
-  text("Health:", 280, 30);
-  text (health, 350, 30);
-  // GAME OVER
-  // if health runs out
-  // show Game over
-  if (health < 0) {
-    background("black");
-    fill("green");
-    textSize(50);
-    text("Game Over!" , 40, 200);
-    text("By Ben" , 40, 250);
-  }
-}
+
+    // create the variables
+    var score = 0;
+    var health = 100;
+    var coinCounter = 0;
+    var frameCounter = 0;
+    var blockCollision = false;
+    var jumpCount = 0; // Track the number of jumps
+
+    function draw() {
+      background(3, 86, 252);
+
+      frameCounter++;
+
+      // Alternate coins every 100 frames
+      if (frameCounter % 100 === 0) {
+        coinCounter = (coinCounter + 1) % 3; // Cycles through 0, 1, 2
+        if (coinCounter === 0) {
+          goldCoin.visible = true;
+          silverCoin.visible = false;
+          bronzeCoin.visible = false;
+        } else if (coinCounter === 1) {
+          goldCoin.visible = false;
+          silverCoin.visible = true;
+          bronzeCoin.visible = false;
+        } else {
+          goldCoin.visible = false;
+          silverCoin.visible = false;
+          bronzeCoin.visible = true;
+        }
+      }
+
+      // SPRITE INTERACTIONS
+      if (player.isTouching(block) || player.isTouching(block2)) {
+        if (!blockCollision) {
+          health = health - 10; // Reduce health by 10
+          blockCollision = true; // Set collision flag
+        }
+      } else {
+        blockCollision = false; // Reset the collision flag when not touching
+      }
+
+      if (player.isTouching(goldCoin) && goldCoin.visible) {
+        score = score + 10;
+        resetCoin(goldCoin);
+      }
+      if (player.isTouching(silverCoin) && silverCoin.visible) {
+        score = score + 5;
+        resetCoin(silverCoin);
+      }
+      if (player.isTouching(bronzeCoin) && bronzeCoin.visible) {
+        score = score + 2;
+        resetCoin(bronzeCoin);
+      }
+
+      // GRAVITY
+      player.velocityY += 1; // Add gravity to pull the player down
+
+      // JUMPING
+      if (keyWentDown("up") && jumpCount < 2) {
+        player.velocityY = -15; // Jump upward
+        jumpCount++; // Increment jump count
+      }
+
+      // RESET JUMPS WHEN PLAYER REACHES THE GROUND
+      if (player.y >= 370) {
+        player.velocityY = 0;
+        player.y = 370; // Ensure the player doesn't go below the ground
+        jumpCount = 0; // Reset jump count
+      }
+
+      // Prevent the player from going above the screen
+      if (player.y < 0) {
+        player.y = 0;
+        player.velocityY = 5; // Pull the player back down
+      }
+
+      // LOOPING
+      moveObstacle(block);
+      moveObstacle(goldCoin);
+      moveObstacle(bronzeCoin);
+      moveObstacle(silverCoin);
+      moveObstacle(block2);
+
+      // DRAW SPRITES
+      drawSprites();
+
+      // SCOREBOARD
+      fill("black");
+      textSize(20);
+      text("Score:", 150, 30);
+      text(score, 220, 30);
+
+      text("Health:", 280, 30);
+      text(health, 350, 30);
+
+      // GAME OVER
+      if (health < 0) {
+        background("black");
+        fill("green");
+        textSize(50);
+        text("Game Over!" , 40, 200);
+        text("By Ben" , 40, 250);
+        noLoop(); // Stop the game
+      }
+    }
   </script>
 </body>
 </html>
